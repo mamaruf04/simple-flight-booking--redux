@@ -1,24 +1,50 @@
-import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import frame from '../../html/img/icons/Frame.svg';
+import vector from '../../html/img/icons/Vector (1).svg';
+import vector2 from '../../html/img/icons/Vector (3).svg';
+import { addBooking } from "../../Redux/Action";
 
 const BookingForm = () => {
+  const dispatch = useDispatch();
+  const booked = useSelector((state) => state);
+
+  let usedIds = [];
+  const idGenerator = () => {
+    const id = `booking${Math.floor(Math.random() * 100)}`;
+    if (usedIds.includes(id)) {
+      return idGenerator();
+    } else {
+      usedIds.push(id);
+      return id;
+    }
+  };
 
 
-    // const handleSubmit = (e) =>{
-    //     e.preventDefault();
-    //     // console.log(e.target);
-    // }
-
-
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const Form = e.target;
+    idGenerator();
+    const info = {
+      id: idGenerator(),
+      from: Form.from.value,
+      to: Form.to.value,
+      date: Form.date.value,
+      guest: Form.guests.value,
+      ticketClass: Form.ticketClass.value,
+    };
+    dispatch(addBooking(info));
+    e.target.reset();
+  };
   return (
     <>
       <div className="mt-[160px] mx-4 md:mt-[160px] relative">
         <div className="bg-white rounded-md max-w-6xl w-full mx-auto">
-          <form className="first-hero lws-inputform">
+          <form onSubmit={handleSubmit} className="first-hero lws-inputform">
             {/* <!-- From --> */}
             <div className="des-from">
               <p>Destination From</p>
               <div className="flex flex-row">
-                <img src="./img/icons/Frame.svg" alt="" />
+                <img src={frame} alt="" />
                 <select
                   className="outline-none px-2 py-2 w-full"
                   name="from"
@@ -40,7 +66,7 @@ const BookingForm = () => {
             <div className="des-from">
               <p>Destination To</p>
               <div className="flex flex-row">
-                <img src="./img/icons/Frame.svg" alt="" />
+                <img src={frame} alt="" />
                 <select
                   className="outline-none px-2 py-2 w-full"
                   name="to"
@@ -74,7 +100,7 @@ const BookingForm = () => {
             <div className="des-from">
               <p>Guests</p>
               <div className="flex flex-row">
-                <img src="./img/icons/Vector (1).svg" alt="" />
+                <img src={vector} alt="" />
                 <select
                   className="outline-none px-2 py-2 w-full"
                   name="guests"
@@ -96,7 +122,7 @@ const BookingForm = () => {
             <div className="des-from !border-r-0">
               <p>Class</p>
               <div className="flex flex-row">
-                <img src="./img/icons/Vector (3).svg" alt="" />
+                <img src={vector2} alt="" />
                 <select
                   className="outline-none px-2 py-2 w-full"
                   name="ticketClass"
@@ -112,7 +138,12 @@ const BookingForm = () => {
               </div>
             </div>
 
-            <button className="addCity" type="submit" id="lws-addCity">
+            <button
+              disabled={booked.length >= 3 ? true : false}
+              className="addCity"
+              type="submit"
+              id="lws-addCity"
+            >
               <svg
                 width="15px"
                 height="15px"

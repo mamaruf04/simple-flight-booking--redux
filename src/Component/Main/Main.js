@@ -1,16 +1,20 @@
-import React from 'react';
-import BookedTable from '../BookedTable/BookedTable';
-import BookingForm from '../BookingForm/BookingForm';
-import Header from '../Header/Header';
+import React from "react";
+import { useSelector } from "react-redux";
+import BookedTable from "../BookedTable/BookedTable";
+import BookingForm from "../BookingForm/BookingForm";
+import Header from "../Header/Header";
 
 const Main = () => {
-    return (
-        <>
-            <Header></Header>
-            <BookingForm></BookingForm>
-            <BookedTable></BookedTable>
-        </>
-    );
+    const booked = useSelector((state) => state);
+  return (
+    <>
+      <Header></Header>
+      <BookingForm></BookingForm>
+      {
+        booked.length && <BookedTable></BookedTable>
+      }
+    </>
+  );
 };
 
 export default Main;
